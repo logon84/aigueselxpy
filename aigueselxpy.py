@@ -143,7 +143,7 @@ def main(argv):
 			out = "json"
 		elif opt in ("-t", "--to"):
 			to_date = arg.replace("-","/")
-	if len(username)>0 and len(passwd)>0 and len(from_date)>9 and len(to_date)>9:
+	if len(username)>0 and len(passwd)>0 and len(from_date)==10 and len(to_date)==10:
 		do_login(username, passwd)
 		json_consumption = get_consumption(from_date, to_date)
 		if out == 'json':
