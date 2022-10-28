@@ -155,7 +155,7 @@ def main(argv):
 		show_usage()
 
 def show_usage():
-	print('\n\naigueselxpy.py -u user:password -f <dd-mm-yyy> -t <dd-mm-yyyy> v1.0')
+	print('\n\naigueselxpy.py -u user:password -f <dd-mm-yyyy> -t <dd-mm-yyyy> v1.0')
 	print('Get hour water consumptions between dates')
 	print('\n\t-u or --credentials: provide user credentials from aigueselx.es')
 	print('\n\t-f or --from: from date (also valid with \'/\' instead of \'-\'')
