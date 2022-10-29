@@ -41,7 +41,7 @@ def do_login(user, passwd):
 		step =  "1"
 		r = s.get(base_url, headers=headers, timeout=20)
 		if r.status_code != 200:
-			raise ResponseException("Response error on login stage(1/" + step + "), code: {}".format(r.status_code))
+			raise ResponseException("Response error on login stage(" + step + "/2), code: {}".format(r.status_code))
 			s = None
 		values['_CustomLoginPortlet_formDate'] = str(int(time.time()) )
 		values["p_auth"] = extract_token(r.content)
