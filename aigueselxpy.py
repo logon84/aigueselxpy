@@ -38,21 +38,23 @@ def do_login(user, passwd):
 			'p_auth': ''}
 	
 	try:
+		step =  "1"
 		r = s.get(base_url, headers=headers, timeout=20)
 		if r.status_code != 200:
-			raise ResponseException("Response error on login stage(1/2), code: {}".format(r.status_code))
+			raise ResponseException("Response error on login stage(1/" + step + "), code: {}".format(r.status_code))
 			s = None
 		values['_CustomLoginPortlet_formDate'] = str(int(time.time()) )
 		values["p_auth"] = extract_token(r.content)
+		step =  "2"
 		r = s.post(login_url, headers=headers, data=values, timeout = 20)
 		if r.status_code != 200:
-			raise ResponseException("Response error on login stage(2/2), code: {}".format(r.status_code))
+			raise ResponseException("Response error on login stage("+ step + "/2), code: {}".format(r.status_code))
 			s = None
 		if "Su usuario o contrase\\xc3\\xb1a no es correcto" in str(r.content):
 			raise LoginException("Login error, bad login")
 			s = None
 	except requests.exceptions.Timeout:
-		print("No response from aigueselx.es (login step)")
+		print("No response from aigueselx.es (login step " + step + ")")
 		sys.exit(1)
 	except LoginException as e:
 		print(e)
@@ -66,19 +68,22 @@ def get_consumption(date_from, date_to):
 	pre_consumption_url = "https://www.aigueselx.com/group/aguas-de-elche/mis-consumos"
 	consumption_url = "https://www.aigueselx.com/group/aguas-de-elche/mis-consumos?p_p_id=MisConsumos&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_cacheability=cacheLevelPage&p_auth={0}&_MisConsumos_op=buscarConsumosHoraria&_MisConsumos_fechaInicio={1}&_MisConsumos_fechaFin={2}&_MisConsumos_inicio=0&_MisConsumos_fin=500"
 	headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0'}
+
 	try:
+		step = "1"
 		r = s.get(pre_consumption_url, headers=headers, timeout=20)
 		if r.status_code != 200:
-			raise ResponseException("Response error on grab consumption stage (1/2), code: {}".format(r.status_code))
+			raise ResponseException("Response error on grab consumption stage (" + step + "/2), code: {}".format(r.status_code))
 			s = None
+		step = "2"
 		r = s.get(consumption_url.format(extract_token(r.content),date_from,date_to), headers=headers, timeout=20)
 		if r.status_code != 200:
-			raise ResponseException("Response error on grab consumption stage (2/2), code: {}".format(r.status_code))
+			raise ResponseException("Response error on grab consumption stage (" + step + "/2), code: {}".format(r.status_code))
 			s = None
 		if len(r.json()["consumos"]) == 0:
 			raise DataOnServerException("No data available on server")
 	except requests.exceptions.Timeout:
-		print("No response from aigueselx.es (get consumption step)")
+		print("No response from aigueselx.es (get consumption step " + step + " )")
 		sys.exit(1)
 	except ResponseException as e:
 		print(e)
@@ -167,4 +172,3 @@ def show_usage():
 if __name__ == "__main__":
    main(sys.argv[1:])
    
-
