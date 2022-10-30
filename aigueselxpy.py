@@ -98,6 +98,7 @@ def get_consumption(date_from, date_to):
 def pretty_data(rejson_data):
 	print("\n\n\t\t\t\t\t CONSUMOS [00h > 11h | 12h > 23h] (litros)")
 	print("{: <13} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3}|{: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3}".format("","0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"))
+	rejson_data = json.loads(rejson_data)
 	for i in rejson_data.keys():
 		print("{: <13} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3}|{: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3} {: <3}".format(i+ ":",rejson_data[i][0],rejson_data[i][1],rejson_data[i][2],rejson_data[i][3],rejson_data[i][4],rejson_data[i][5],rejson_data[i][6],rejson_data[i][7],rejson_data[i][8],rejson_data[i][9],rejson_data[i][10],rejson_data[i][11],rejson_data[i][12],rejson_data[i][13],rejson_data[i][14],rejson_data[i][15],rejson_data[i][16],rejson_data[i][17],rejson_data[i][18],rejson_data[i][19],rejson_data[i][20],rejson_data[i][21],rejson_data[i][22],rejson_data[i][23]))
 
