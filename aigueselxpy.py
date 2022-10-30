@@ -113,19 +113,19 @@ def rejson(orig_json_data):
 
 		if i == 0:
 			while int(orig_json_data["consumos"][0]["fechaConsumo"][12:14]) != (23 - len(day_consumptions)): #fill still not measured with -1
-				day_consumptions.append(-1)
+				day_consumptions.append("-1")
 		else:
 			while int(orig_json_data["consumos"][i]["fechaConsumo"][12:14]) != (23 - (len(day_consumptions) % 24)): #fix missing hours
-				day_consumptions.append(0)
-		day_consumptions.append((int(1000*float(orig_json_data["consumos"][i]["consumo"].replace(",",".")))))
+				day_consumptions.append("0")
+		day_consumptions.append(str(int(1000*float(orig_json_data["consumos"][i]["consumo"].replace(",",".")))))
 	
-	out = "{"
+	out_dict = dict()
 	for i in range(len(dates)):
 		day_piece = day_consumptions[24*i:24*(i+1)]
 		day_piece = day_piece[::-1]
-		out = out + "\"" + dates[i][:2] + "/" + str((1+months.index(dates[i][3:][:3]))).zfill(2) + "/" + dates[i][7:][:4] + "\":" + str(day_piece) + ","
-	out = out[:len(out)-1] + "}"
-	return json.loads(out)
+		current_date = dates[i][:2] + "/" + str((1+months.index(dates[i][3:][:3]))).zfill(2) + "/" + dates[i][7:][:4]
+		out_dict.update({current_date:day_piece})
+	return str(out_dict).replace("\'","\"")
 
 def main(argv):
 	username = ''
@@ -155,7 +155,6 @@ def main(argv):
 		json_consumption = get_consumption(from_date, to_date)
 		if out == 'json':
 			print(json_consumption)
-			#print(json_consumption["23/10/2022"][13]) # print consumption on 23/10/2022 at 13h
 		else:
 			pretty_data(json_consumption)
 	else:
