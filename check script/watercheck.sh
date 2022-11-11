@@ -37,7 +37,7 @@ if [ $amIpresent -eq 0 ]; then
 	next_hour_to_look=$(date -d @$next_fulldate_to_look +'%H')
 	echo "NEXT HOUR TO LOOK:$next_hour_to_look"
 	water_data=$($bins_folder/python $aigueselxpy_folder/aigueselxpy.py -u $aigues_user:$aigues_password -f $next_day_to_look -t $next_day_to_look -j)
-	water_value_at_hour=$(echo $water_data | jq -r .[\"$next_day_to_look\"][$next_hour_to_look])
+	water_value_at_hour=$(echo $water_data | $bins_folder/jq -r .[\"$next_day_to_look\"][$next_hour_to_look])
 	if [ -n "$water_value_at_hour" ] && [ "$water_value_at_hour" -eq "$water_value_at_hour" ] 2>/dev/null; then
 		#$water_value_at_hour contains a number
 		if [ ! $water_value_at_hour -eq -1 ]; then
@@ -75,7 +75,7 @@ if [ $amIpresent -eq 0 ]; then
  				echo "NEXTDAYTOLOOK:$next_day_to_look"
 				next_hour_to_look=$(date -d @$next_fulldate_to_look +'%H')
 				echo "NEXT HOUR TO LOOK:$next_hour_to_look"
-				water_value_at_hour=$(echo $water_data | jq -r .[\"$next_day_to_look\"][$next_hour_to_look])
+				water_value_at_hour=$(echo $water_data | $bins_folder/jq -r .[\"$next_day_to_look\"][$next_hour_to_look])
 			done
 			#store new date to check for water
 			echo "Set next check to $next_day_to_look at $next_hour_to_look h."
