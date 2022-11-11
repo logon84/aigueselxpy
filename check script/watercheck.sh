@@ -28,7 +28,7 @@ if [ $amIpresent -eq 0 ]; then
 	#I'm out of home
 	if [ ! -e $aigueselxpy_folder/waterflow_next_check ]; then
 		next_fulldate_to_look=$(date '+%s')
-		next_fulldate_to_look=$(($next_fulldate_to_look+3600))
+		next_fulldate_to_look=$(($next_fulldate_to_look+7200))
 		$(echo $next_fulldate_to_look > $aigueselxpy_folder/waterflow_next_check)
 	fi
 	next_fulldate_to_look=$(cat $aigueselxpy_folder/waterflow_next_check)
