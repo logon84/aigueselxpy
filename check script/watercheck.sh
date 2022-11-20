@@ -59,6 +59,7 @@ if [ $amIpresent -eq 0 ]; then
 					$bins_folder/telegram-send --config $telegram_send_conf "ALERTA: Fuga de agua en casa! Liters: $water_value_at_hour. Current json data: $water_data "
 					$(echo $(($notices+1)) > $aigueselxpy_folder/waterflow_sensor.notices)
 					echo "NOTICES:$notices"
+					echo 0 > $aigueselxpy_folder/waterflow_sensor.zeros
 				elif [ $water_value_at_hour -gt 0 ] && [ $notices -lt 1 ]; then
 					#Some water detected 0<X<thresold. Check that is just a change in pipe pressure
 					strikes=$(($strikes+1))
@@ -69,13 +70,14 @@ if [ $amIpresent -eq 0 ]; then
 						$(echo $(($notices+1)) > $aigueselxpy_folder/waterflow_sensor.notices)
 						echo "NOTICES:$notices"
 					fi
+					echo 0 > $aigueselxpy_folder/waterflow_sensor.zeros
 				else
 					echo "read 0, everything is OK"
 					if [ -e $aigueselxpy_folder/waterflow_sensor.zeros ] && [ -z $zeros ]; then
-                	                        zeros=$(cat $aigueselxpy_folder/waterflow_sensor.zeros)
-	                                elif [ -z $zeross ]; then
-        	                                zeros=0
-                        	        fi
+						zeros=$(cat $aigueselxpy_folder/waterflow_sensor.zeros)
+					elif [ -z $zeross ]; then
+						zeros=0
+					fi
 					zeros=$(($zeros+1))
 					$(echo $zeros > $aigueselxpy_folder/waterflow_sensor.zeros)
 					echo "ZEROSS:$zeros"
@@ -83,6 +85,7 @@ if [ $amIpresent -eq 0 ]; then
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.zeros
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.notices
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.strikes
+						echo "DO RESET VARS"
 					fi
 				fi
 				#point to next hour
@@ -125,4 +128,3 @@ else
         fi
 
 fi
-
