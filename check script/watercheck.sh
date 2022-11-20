@@ -57,17 +57,33 @@ if [ $amIpresent -eq 0 ]; then
 				if [ $water_value_at_hour -gt $liters_threshold ] && [ $notices -lt 1 ]; then
 					#warning, water leak!
 					$bins_folder/telegram-send --config $telegram_send_conf "ALERTA: Fuga de agua en casa! Liters: $water_value_at_hour. Current json data: $water_data "
-					$(echo $(($notices+1)) >  $aigueselxpy_folder/waterflow_sensor.notices)
+					$(echo $(($notices+1)) > $aigueselxpy_folder/waterflow_sensor.notices)
+					echo "NOTICES:$notices"
 				elif [ $water_value_at_hour -gt 0 ] && [ $notices -lt 1 ]; then
 					#Some water detected 0<X<thresold. Check that is just a change in pipe pressure
 					strikes=$(($strikes+1))
-					$(echo $strikes >  $aigueselxpy_folder/waterflow_sensor.strikes)
+					$(echo $strikes > $aigueselxpy_folder/waterflow_sensor.strikes)
+					echo "STRIKES:$strikes"
 					if [ $strikes -ge 3 ]; then
 						$($bins_folder/telegram-send --config $telegram_send_conf "ALERTA: Fuga de agua en casa durante 3 o más horas consecutivas! Liters: $water_value_at_hour. Current json data: $water_data ")
 						$(echo $(($notices+1)) > $aigueselxpy_folder/waterflow_sensor.notices)
+						echo "NOTICES:$notices"
 					fi
 				else
 					echo "read 0, everything is OK"
+					if [ -e $aigueselxpy_folder/waterflow_sensor.zeros ] && [ -z $zeros ]; then
+                	                        zeros=$(cat $aigueselxpy_folder/waterflow_sensor.zeros)
+	                                elif [ -z $zeross ]; then
+        	                                zeros=0
+                        	        fi
+					zeros=$(($zeros+1))
+					$(echo $zeros > $aigueselxpy_folder/waterflow_sensor.zeros)
+					echo "ZEROSS:$zeros"
+					if [ $zeros -ge 3 ]; then
+						echo 0 > $aigueselxpy_folder/waterflow_sensor.zeros
+						echo 0 > $aigueselxpy_folder/waterflow_sensor.notices
+						echo 0 > $aigueselxpy_folder/waterflow_sensor.strikes
+					fi
 				fi
 				#point to next hour
 				next_fulldate_to_look=$(($next_fulldate_to_look+3600))
@@ -104,7 +120,9 @@ else
 	if [ -e $aigueselxpy_folder/waterflow_sensor.strikes ]; then
 		rm -rf  $aigueselxpy_folder/waterflow_sensor.strikes
 	fi
+	if [ -e $aigueselxpy_folder/waterflow_sensor.zeros ]; then
+                rm -rf  $aigueselxpy_folder/waterflow_sensor.zeros
+        fi
+
 fi
-
-
 
