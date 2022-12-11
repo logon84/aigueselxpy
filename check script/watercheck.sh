@@ -82,6 +82,9 @@ if [ $amIpresent -eq 0 ]; then
 					$(echo $zeros > $aigueselxpy_folder/waterflow_sensor.zeros)
 					echo "ZEROSS:$zeros"
 					if [ $zeros -ge 3 ]; then
+						strikes=0
+						notices=0
+						zeros=0
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.zeros
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.notices
 						echo 0 > $aigueselxpy_folder/waterflow_sensor.strikes
