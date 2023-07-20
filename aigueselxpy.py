@@ -109,17 +109,18 @@ def rejson(orig_json_data):
 	day_consumptions = []
 	dates = []
 	for i in range(len(orig_json_data["consumos"])):
-		if orig_json_data["consumos"][i]["fechaConsumo"][:11] not in dates:
-			dates.append(orig_json_data["consumos"][i]["fechaConsumo"][:11])
+		if orig_json_data["consumos"][i]["fechaConsumo"] not in dates:
+			dates.append(orig_json_data["consumos"][i]["fechaConsumo"])
 
 		if i == 0:
-			while int(orig_json_data["consumos"][0]["fechaConsumo"][12:14]) != (23 - len(day_consumptions)): #fill still not measured with -1
+			#fill still not measured with -1
+			while int(orig_json_data["consumos"][0]["horaConsumo"][:2]) != (23 - len(day_consumptions)):
 				day_consumptions.append("-1")
 		else:
-			while int(orig_json_data["consumos"][i]["fechaConsumo"][12:14]) != (23 - (len(day_consumptions) % 24)): #fix missing hours
+			#fix missing hours
+			while int(orig_json_data["consumos"][i]["horaConsumo"][:2]) != (23 - (len(day_consumptions) % 24)):
 				day_consumptions.append("0")
 		day_consumptions.append(str(int(1000*float(orig_json_data["consumos"][i]["consumo"].replace(",",".")))))
-	
 	out_dict = dict()
 	for i in range(len(dates)):
 		day_piece = day_consumptions[24*i:24*(i+1)]
@@ -174,3 +175,4 @@ def show_usage():
 if __name__ == "__main__":
    main(sys.argv[1:])
    
+
